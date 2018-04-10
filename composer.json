@@ -21,9 +21,8 @@
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {
-        "classmap": [],
         "psr-4": {
-            "App\\": "app/"
+            "Roycedev\\Roycedb\\": "src/"
         }
     },
     "autoload-dev": {
