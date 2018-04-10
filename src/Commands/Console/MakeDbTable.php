@@ -1,6 +1,6 @@
 <?php
 
-namespace Roycedev\Laravel\Commands\Console;
+namespace Roycedev\Roycedb\Console;
 
 use Illuminate\Console\Command;
 
