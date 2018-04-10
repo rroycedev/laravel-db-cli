@@ -4,7 +4,7 @@ namespace Roycedev\Roycedb\Console;
 
 use Illuminate\Console\Command;
 
-class MakeDbTable extends Command
+class MakeDbTableCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -20,7 +20,7 @@ class MakeDbTable extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Creates a databae migration script and model for a database table';
 
     /**
      * Create a new command instance.

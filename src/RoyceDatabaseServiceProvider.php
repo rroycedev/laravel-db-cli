@@ -6,7 +6,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Roycedev\Roycedb\RoyceDatabase;
-use Roycedev\Roycedb\Console\MakeDbTable;
+use Roycedev\Roycedb\Console\MakeDbTableCommand;
 
 class RoyceDatabaseServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
-                MakeDbTable::class,
+                MakeDbTableCommand::class,
             ]);
         }
     }
