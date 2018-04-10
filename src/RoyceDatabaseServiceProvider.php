@@ -6,10 +6,9 @@ use Roycedev\Roycedb\Facades\Roycedb;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Roycedev\Roycedb\Roycedb;
 use Roycedev\Roycedb\Console\MakeDbTableCommand;
 
-class RoycedbServiceProvider extends ServiceProvider
+class RoyceDatabaseServiceProvider extends ServiceProvider
 {
     /**
      * Run service provider boot operations.
