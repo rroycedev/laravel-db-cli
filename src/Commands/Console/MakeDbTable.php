@@ -1,6 +1,6 @@
 <?php
 
-namespace Roycedev\DbCli\Commands\Console;
+namespace Roycedev\Laravel\Commands\Console;
 
 use Illuminate\Console\Command;
 
@@ -11,7 +11,7 @@ class MakeDbTable extends Command
      *
      * @var string
      */
-    protected $signature = 'roycedev:maketable {tablename? : The name of the table to create.}
+    protected $signature = 'roycedb:maketable {tablename? : The name of the table to create.}
             {--no-log : Disables logging successful and unsuccessful imports.}';
 
 

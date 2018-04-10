@@ -2,16 +2,16 @@
 
 namespace Roycedev\Laravel;
 
-use Roycedev\RoyceDatabase;
 use Adldap\AdldapInterface;
 use Adldap\Auth\BindException;
-use Adldap\Connections\Provider;
-use Adldap\Schemas\SchemaInterface;
 use Adldap\Connections\ConnectionInterface;
+use Adldap\Connections\Provider;
 use Adldap\Laravel\Exceptions\ConfigurationMissingException;
+use Adldap\Schemas\SchemaInterface;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Roycedev\RoyceDatabase;
 
 class RoyceDatabaseServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
             return;
         }
 
-        $config = __DIR__.'/Config/config.php';
+        $config = __DIR__ . '/Config/config.php';
 
         $this->publishes([
             $config => config_path('roycedb.php'),
@@ -59,6 +59,12 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
         // Bind the RoyceDatabase contract to the RoyceDatabase object
         // in the IoC for dependency injection.
         $this->app->singleton(AdldapInterface::class, 'roycedb');
+
+        // Register Amazon Artisan commands
+        $this->commands([
+            'Roycedev\Laravel\Commands\Console\MakeDbTable',
+        ]);
+
     }
 
     /**
@@ -82,7 +88,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
      *
      * @throws \Adldap\Auth\BindException
      *
-     * @return RoyceDatabase 
+     * @return RoyceDatabase
      */
     protected function addProviders(RoyceDatabase $royceDb, array $connections = [])
     {
@@ -116,7 +122,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
     /**
      * Returns a new RoyceDatabase instance.
      *
-     * @return RoyceDatabase 
+     * @return RoyceDatabase
      */
     protected function newRoyceDatabase()
     {
