@@ -33,7 +33,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Roycedev\\Roycedb\\RoyceDatabaseServiceProvider"
+                "Roycedev\\Roycedb\\RoyceDatabaseServiceProvider",
+                "Roycedev\\Roycedb\\RoyceDatabaseAuthServiceProvider"
             ],
             "aliases": {
                 "Roycedb": "Roycedev\\Roycedb\\Facades\\Roycedb"
