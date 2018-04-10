@@ -2,13 +2,14 @@
 
 namespace Roycedev\Roycedb;
 
+use Roycedev\Roycedb\Facades\Roycedb;
 use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Roycedev\Roycedb\RoyceDatabase;
+use Roycedev\Roycedb\Roycedb;
 use Roycedev\Roycedb\Console\MakeDbTableCommand;
 
-class RoyceDatabaseServiceProvider extends ServiceProvider
+class RoycedbServiceProvider extends ServiceProvider
 {
     /**
      * Run service provider boot operations.
@@ -18,7 +19,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
     public function boot()
     {
         $configPath = __DIR__ . '/../config/roycedb.php';
-        $this->publishes([$configPath => $this->getConfigPath()], 'config');
+        $this->publishes([$configPath => $this->getConfigPath()], 'roycedb');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -44,13 +45,13 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
         );
 */
 
-        $this->app->singleton(RoyceDatabase::class, function () {
-            $roycedb = new RoyceDatabase($this->app);
+        $this->app->singleton(Roycedb::class, function () {
+            $roycedb = new Roycedb($this->app);
 
             return $roycedb;
         });
 
-        $this->app->alias(RoyceDatabase::class, 'roycedb');
+        $this->app->alias(Roycedb::class, 'roycedb');
 
         $this->app->singleton('command.roycedb.maketable', function ($app) {
                 return new MakeDbTableCommand($app['roycedb']);
@@ -92,6 +93,6 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['roycedb', 'command.roycedb.maketable', RoyceDatabase::class];
+        return ['roycedb', 'command.roycedb.maketable', Roycedb::class];
     }
 }

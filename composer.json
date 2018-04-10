@@ -31,11 +31,13 @@
         }
     },
     "extra": {
-        "providers": [
-            "Roycedev\\Roycedb\\RoyceDatabaseServiceProvider"
-        ],
-        "aliases": {
-            "Roycedb": "Roycedev\\Laravel\\Facades"
+        "laravel": {
+            "providers": [
+                "Roycedev\\Roycedb\\RoyceDatabaseServiceProvider"
+            ],
+            "aliases": {
+                "Roycedb": "Roycedev\\Roycedb\\Facades\\Roycedb"
+            }
         }
     },
     "scripts": {
