@@ -1,4 +1,4 @@
-# RoyceDatabase - Laravel
+# RoyceDatabase - Laravel version 1.0.0
 
 ## Requirements
 

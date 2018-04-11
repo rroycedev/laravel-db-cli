@@ -42,9 +42,6 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
     {
         // Bind the Adldap instance to the IoC
         $this->app->singleton('roycedb', function (Container $app) {
-            echo "Inside register singletons\n";
-            exit(1);
-
             $config = $app->make('config')->get('roycedb');
 
             // Verify configuration exists.
