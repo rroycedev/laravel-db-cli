@@ -10,11 +10,11 @@ use Adldap\Laravel\Events\Authenticated;
 use Adldap\Laravel\Events\Authenticating;
 use Adldap\Laravel\Events\AuthenticationFailed;
 use Adldap\Query\Builder;
-*/
+ */
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Event;
-use Roycedev\Roycedb\AdldapInterface;
+use Roycedev\Roycedb\RoycedbInterface;
+use Roycedev\Roycedb\Resolvers\ResolverInterface;
 use Roycedev\Roycedb\User;
 
 class UserResolver implements ResolverInterface
@@ -56,7 +56,7 @@ class UserResolver implements ResolverInterface
      */
     public function byId($identifier)
     {
-  //      return $this->query()->findByGuid($identifier);
+        //      return $this->query()->findByGuid($identifier);
     }
 
     /**
@@ -65,25 +65,25 @@ class UserResolver implements ResolverInterface
     public function byCredentials(array $credentials = [])
     {
         /*
-        if (empty($credentials)) {
-            return;
-        }
+    if (empty($credentials)) {
+    return;
+    }
 
-        $provider = Config::get('adldap_auth.provider', DatabaseUserProvider::class);
+    $provider = Config::get('adldap_auth.provider', DatabaseUserProvider::class);
 
-        // Depending on the configured user provider, the
-        // username field will differ for retrieving
-        // users by their credentials.
-        if ($provider == NoDatabaseUserProvider::class) {
-            $username = $credentials[$this->getLdapDiscoveryAttribute()];
-        } else {
-            $username = $credentials[$this->getEloquentUsernameAttribute()];
-        }
+    // Depending on the configured user provider, the
+    // username field will differ for retrieving
+    // users by their credentials.
+    if ($provider == NoDatabaseUserProvider::class) {
+    $username = $credentials[$this->getLdapDiscoveryAttribute()];
+    } else {
+    $username = $credentials[$this->getEloquentUsernameAttribute()];
+    }
 
-        $field = $this->getLdapDiscoveryAttribute();
+    $field = $this->getLdapDiscoveryAttribute();
 
-        return $this->query()->whereEquals($field, $username)->first();
-        */
+    return $this->query()->whereEquals($field, $username)->first();
+     */
     }
 
     /**
@@ -92,12 +92,12 @@ class UserResolver implements ResolverInterface
     public function byModel(Authenticatable $model)
     {
         /*
-        $field = $this->getLdapDiscoveryAttribute();
+    $field = $this->getLdapDiscoveryAttribute();
 
-        $username = $model->{$this->getEloquentUsernameAttribute()};
+    $username = $model->{$this->getEloquentUsernameAttribute()};
 
-        return $this->query()->whereEquals($field, $username)->first();
-        */
+    return $this->query()->whereEquals($field, $username)->first();
+     */
     }
 
     /**
@@ -112,7 +112,7 @@ class UserResolver implements ResolverInterface
         // authentication attribute, we'll convert it to
         // the full attribute name for convenience.
         if ($attribute == 'dn') {
-            $attribute = $user->getSchema()->distinguishedName();
+        $attribute = $user->getSchema()->distinguishedName();
         }
 
         $username = $user->getFirstAttribute($attribute);
@@ -122,13 +122,13 @@ class UserResolver implements ResolverInterface
         Event::fire(new Authenticating($user, $username));
 
         if ($this->getProvider()->auth()->attempt($username, $password)) {
-            Event::fire(new Authenticated($user));
+        Event::fire(new Authenticated($user));
 
-            return true;
+        return true;
         }
 
         Event::fire(new AuthenticationFailed($user));
-*/
+         */
         return false;
     }
 
@@ -138,25 +138,25 @@ class UserResolver implements ResolverInterface
     public function query(): Builder
     {
         /*
-        $query = $this->getProvider()->search()->users();
+    $query = $this->getProvider()->search()->users();
 
-        $scopes = Config::get('adldap_auth.scopes', []);
+    $scopes = Config::get('adldap_auth.scopes', []);
 
-        if (is_array($scopes)) {
-            foreach ($scopes as $scope) {
-                // Here we will use Laravel's IoC container to construct our scope.
-                // This allows us to utilize any Laravel dependencies in
-                // the scopes constructor that may be needed.
+    if (is_array($scopes)) {
+    foreach ($scopes as $scope) {
+    // Here we will use Laravel's IoC container to construct our scope.
+    // This allows us to utilize any Laravel dependencies in
+    // the scopes constructor that may be needed.
 
-                $scope = app($scope);
+    $scope = app($scope);
 
-                // With the scope constructed, we can apply it to our query.
-                $scope->apply($query);
-            }
-        }
+    // With the scope constructed, we can apply it to our query.
+    $scope->apply($query);
+    }
+    }
 
-        return $query;
-        */
+    return $query;
+     */
     }
 
     /**
