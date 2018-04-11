@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Roycedev\Roycedb\Console\MakeDbTableCommand;
 use Roycedev\Roycedb\Facades\Roycedb;
+use Roycedev\Roycedb\RoycedbInterface;
 
 class RoyceDatabaseServiceProvider extends ServiceProvider
 {
@@ -56,7 +57,7 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
 
         // Bind the Adldap contract to the Adldap object
         // in the IoC for dependency injection.
-        $this->app->singleton(AdldapInterface::class, 'roycedb');
+        $this->app->singleton(RoycedbInterface::class, 'roycedb');
 
         $this->commands([MakeDbTableCommand::class]);
     }

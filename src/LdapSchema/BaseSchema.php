@@ -1,6 +1,6 @@
 <?php
 
-namespace App\LdapSchema;
+namespace Roycedev\Roycedb\LdapSchema;
 
 use Adldap\Models\Computer;
 use Adldap\Models\Contact;

@@ -13,8 +13,8 @@ use Adldap\Query\Builder;
  */
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Config;
-use Roycedev\Roycedb\RoycedbInterface;
 use Roycedev\Roycedb\Resolvers\ResolverInterface;
+use Roycedev\Roycedb\RoycedbInterface;
 use Roycedev\Roycedb\User;
 
 class UserResolver implements ResolverInterface
@@ -38,6 +38,9 @@ class UserResolver implements ResolverInterface
      */
     public function __construct(RoycedbInterface $ldap)
     {
+        throw new \Exception("User Resolver constructor");
+        exit(1);
+        
         $this->ldap = $ldap;
 
 //        $this->setConnection($this->getAuthConnection());
@@ -64,26 +67,31 @@ class UserResolver implements ResolverInterface
      */
     public function byCredentials(array $credentials = [])
     {
-        /*
-    if (empty($credentials)) {
-    return;
-    }
+        echo "By Creds";
+        exit(1);
 
-    $provider = Config::get('adldap_auth.provider', DatabaseUserProvider::class);
+        if (empty($credentials)) {
+            return;
+        }
 
-    // Depending on the configured user provider, the
-    // username field will differ for retrieving
-    // users by their credentials.
-    if ($provider == NoDatabaseUserProvider::class) {
-    $username = $credentials[$this->getLdapDiscoveryAttribute()];
-    } else {
-    $username = $credentials[$this->getEloquentUsernameAttribute()];
-    }
+        $provider = Config::get('roycedb_auth.provider', DatabaseUserProvider::class);
 
-    $field = $this->getLdapDiscoveryAttribute();
+        // Depending on the configured user provider, the
+        // username field will differ for retrieving
+        // users by their credentials.
+        if ($provider == NoDatabaseUserProvider::class) {
+            $username = $credentials[$this->getLdapDiscoveryAttribute()];
+        } else {
+            $username = $credentials[$this->getEloquentUsernameAttribute()];
+        }
 
-    return $this->query()->whereEquals($field, $username)->first();
-     */
+        $field = $this->getLdapDiscoveryAttribute();
+
+        echo "Searching<br>";
+
+        exit(1);
+
+        return $this->query()->whereEquals($field, $username)->first();
     }
 
     /**

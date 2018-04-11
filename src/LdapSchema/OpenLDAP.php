@@ -11,7 +11,7 @@ class OpenLDAP extends BaseSchema
 
     public function userModel()
     {
-        return "App\Ldap\Models\LdapUser";
+        return Config::get('roycedb_ldap_schema.names.usermodel');
     }
 
     public function userPrincipalName()

@@ -2,8 +2,7 @@
 
 namespace Roycedev\Roycedb;
 
-use Adldap\Laravel\Auth\DatabaseUserProvider;
-use Adldap\Laravel\Resolvers\ResolverInterface;
+use Adldap\Laravel\Listeners\BindsLdapUserModel;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use Roycedev\Roycedb\Auth\DatabaseUserProvider;
+use Roycedev\Roycedb\LdapSchema\OpenLDAP;
+use Roycedev\Roycedb\Resolvers\ResolverInterface;
 use Roycedev\Roycedb\Resolvers\UserResolver;
 use Roycedev\Roycedb\Roycedb;
 
@@ -49,6 +51,17 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $schema = new OpenLDAP();
+
+        Config::set('adldap.connections.default.schema', 'Roycedev\Roycedb\LdapSchema\OpenLDAP');
+
+        Config::set('adldap_auth.usernames.ldap.discover', $schema->userPrincipalName());
+        Config::set('adldap_auth.usernames.ldap.authenticate', $schema->userPrincipalName());
+
+        Config::set('adldap_auth.usernames.eloquent', 'username');
+
+        Config::set('adldap_auth.sync_attributes', ['id' => 'uidnumber', 'username' => 'uid', 'name' => 'cn']);
+
         $this->registerBindings();
 
         $this->registerListeners();
@@ -74,7 +87,9 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
         $this->app->bind(ResolverInterface::class, function () {
             $ad = $this->app->make(Roycedb::class);
 
-            return new UserResolver($ad);
+            $ur = new UserResolver($ad);
+
+            return $ur;
         });
     }
 
@@ -89,7 +104,7 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
         // model to their Eloquent model upon authentication (if configured).
         // This allows us to utilize their LDAP model right
         // after authentication has passed.
-        Event::listen(Authenticated::class, Listeners\BindsLdapUserModel::class);
+        Event::listen(Authenticated::class, BindsLdapUserModel::class);
 
         if ($this->isLogging()) {
             // If logging is enabled, we will set up our event listeners that
@@ -112,7 +127,7 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     protected function makeUserProvider(Hasher $hasher, array $config)
     {
-        $provider = Config::get('adldap_auth.provider', DatabaseUserProvider::class);
+        $provider = Config::get('roycedb_auth.provider', DatabaseUserProvider::class);
 
         // The DatabaseUserProvider has some extra dependencies needed,
         // so we will validate that we have them before
