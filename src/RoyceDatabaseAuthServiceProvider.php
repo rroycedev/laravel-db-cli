@@ -51,16 +51,21 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $schema = new OpenLDAP();
+        $driverName = Config::get('roycedb.driver.name');
 
-        Config::set('adldap.connections.default.schema', 'Roycedev\Roycedb\LdapSchema\OpenLDAP');
+        if ($driverName == "adldap") {
 
-        Config::set('adldap_auth.usernames.ldap.discover', $schema->userPrincipalName());
-        Config::set('adldap_auth.usernames.ldap.authenticate', $schema->userPrincipalName());
+            $schema = new OpenLDAP();
 
-        Config::set('adldap_auth.usernames.eloquent', 'username');
+            Config::set('adldap.connections.default.schema', 'Roycedev\Roycedb\LdapSchema\OpenLDAP');
 
-        Config::set('adldap_auth.sync_attributes', ['id' => 'uidnumber', 'username' => 'uid', 'name' => 'cn']);
+            Config::set('adldap_auth.usernames.ldap.discover', $schema->userPrincipalName());
+            Config::set('adldap_auth.usernames.ldap.authenticate', $schema->userPrincipalName());
+
+            Config::set('adldap_auth.usernames.eloquent', 'username');
+
+            Config::set('adldap_auth.sync_attributes', ['id' => 'uidnumber', 'username' => 'uid', 'name' => 'cn']);
+        }
 
         $this->registerBindings();
 
@@ -154,7 +159,13 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     protected function isLogging()
     {
-        return Config::get('adldap_auth.logging.enabled', false);
+        $driverName = Config::get('roycedb.driver.name');
+
+        if ($driverName == "adldap") {
+            return Config::get('adldap_auth.logging.enabled', false);
+        }
+
+        return false;
     }
 
     /**
@@ -164,6 +175,12 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     protected function getLoggingEvents()
     {
-        return Config::get('adldap_auth.logging.events', []);
+        $driverName = Config::get('roycedb.driver.name');
+
+        if ($driverName == "adldap") {
+            return Config::get('adldap_auth.logging.events', []);
+        }
+
+        return [];
     }
 }

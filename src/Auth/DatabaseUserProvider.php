@@ -107,39 +107,40 @@ class DatabaseUserProvider extends Provider
      */
     public function retrieveByCredentials(array $credentials)
     {
-        echo "DatabaseUserProvider::retrieveByCreds<br>";
-        exit(1);
+        $driverName = Config::get('roycedb.driver.name');
 
-        $ldapCredentials = array("username" => $credentials["email"], "password" => $credentials["password"]);
+        if ($driverName == "adldap") {
+            $ldapCredentials = array("username" => $credentials["email"], "password" => $credentials["password"]);
 
-        $schema = new OpenLDAP();
+            $schema = new OpenLDAP();
+    
+            Config::set('adldap.connections.default.schema', Config::get('roycedb.driver.schema'));
 
-        Config::set('adldap.connections.default.schema', 'Roycedev\Roycedb\LdapSchema\OpenLDAP');
-
-        Config::set('adldap_auth.usenames.ldap.discover', $schema->userPrincipalName());
-        Config::set('adldap_auth.usenames.ldap.authenticate', $schema->userPrincipalName());
-
-        Config::set('adldap_auth.usernames.eloquent', 'username');
-
-        Config::set('adldap_auth.sync_attributes', ['username' => 'uid', 'first_name' => 'givenname', 'last_name' => 'sn', 'email' => 'mail']);
-
-        // Retrieve the LDAP user who is authenticating.
-        $user = \Adldap\Laravel\Facades\Resolver::byCredentials($ldapCredentials);
-
-        if ($user instanceof User) {
-            // Set the currently authenticating LDAP user.
-            $this->user = $user;
-
-            Event::fire(new DiscoveredWithCredentials($user));
-
-            // Import / locate the local user account.
-            $import = new Import($user, $this->createModel(), $ldapCredentials);
-
-            return Bus::dispatch($import);
-        }
-
-        if ($this->isFallingBack()) {
-            return $this->fallback->retrieveByCredentials($ldapCredentials);
+            Config::set('adldap_auth.usenames.ldap.discover', $schema->userPrincipalName());
+            Config::set('adldap_auth.usenames.ldap.authenticate', $schema->userPrincipalName());
+    
+            Config::set('adldap_auth.usernames.eloquent', 'username');
+    
+            Config::set('adldap_auth.sync_attributes', ['username' => 'uid', 'first_name' => 'givenname', 'last_name' => 'sn', 'email' => 'mail']);
+    
+            // Retrieve the LDAP user who is authenticating.
+            $user = \Adldap\Laravel\Facades\Resolver::byCredentials($ldapCredentials);
+    
+            if ($user instanceof User) {
+                // Set the currently authenticating LDAP user.
+                $this->user = $user;
+    
+                Event::fire(new DiscoveredWithCredentials($user));
+    
+                // Import / locate the local user account.
+                $import = new Import($user, $this->createModel(), $ldapCredentials);
+    
+                return Bus::dispatch($import);
+            }
+    
+            if ($this->isFallingBack()) {
+                return $this->fallback->retrieveByCredentials($ldapCredentials);
+            }   
         }
     }
 
@@ -240,6 +241,12 @@ class DatabaseUserProvider extends Provider
      */
     protected function isFallingBack(): bool
     {
-        return Config::get('adldap_auth.login_fallback', false);
+        $driverName = Config::get('roycedb.driver.name');
+
+        if ($driverName == "adldap") {
+            return Config::get('adldap_auth.login_fallback', false);
+        }
+
+        return false;
     }
 }
