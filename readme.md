@@ -1,8 +1,7 @@
-# RoyceDatabase - Laravel version 1.0.6
-
+# RoyceDatabase - Laravel version 1.0.67
 ## Requirements
 
-Version 1.0.6
+Version 1.0.7
 
 To use Adldap2-Laravel, your application and server must meet the following requirements:
 

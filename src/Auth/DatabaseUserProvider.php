@@ -74,7 +74,18 @@ class DatabaseUserProvider extends Provider
      */
     public function retrieveById($identifier)
     {
-        return $this->fallback->retrieveById($identifier);
+        $driverName = Config::get('roycedb.driver.name');
+
+        if ($driverName == "adldap") {
+            return $this->fallback->retrieveById($identifier);
+        }
+
+        $model = $this->createModel();
+
+        return $model->newQuery()
+            ->where($model->getAuthIdentifierName(), $identifier)
+            ->first();
+        
     }
 
     /**
@@ -142,6 +153,27 @@ class DatabaseUserProvider extends Provider
                 return $this->fallback->retrieveByCredentials($ldapCredentials);
             }   
         }
+        else {
+            if (empty($credentials) ||
+            (count($credentials) === 1 &&
+             array_key_exists('password', $credentials))) {
+                 return;
+            }
+ 
+            // First we will add each credential element to the query as a where clause.
+            // Then we can execute the query and, if we found a user, return it in a
+            // Eloquent User "model" that will be utilized by the Guard instances.
+            $query = $this->createModel()->newQuery();
+    
+            foreach ($credentials as $key => $value) {
+                if (! Str::contains($key, 'password')) {
+                    $query->where($key, $value);
+                }
+            }
+    
+            return $query->first();
+             
+        }
     }
 
     /**
@@ -153,48 +185,56 @@ class DatabaseUserProvider extends Provider
      */
     public function validateCredentials(Authenticatable $model, array $credentials)
     {
-        if ($this->user instanceof User) {
-            // If an LDAP user was discovered, we can go
-            // ahead and try to authenticate them.
-            if (Resolver::authenticate($this->user, $credentials)) {
-                Event::fire(new AuthenticatedWithCredentials($this->user, $model));
+        $driverName = Config::get('roycedb.driver.name');
 
-                // Here we will perform authorization on the LDAP user. If all
-                // validation rules pass, we will allow the authentication
-                // attempt. Otherwise, it is automatically rejected.
-                if ($this->passesValidation($this->user, $model)) {
-                    // Here we can now synchronize / set the users password since
-                    // they have successfully passed authentication
-                    // and our validation rules.
-                    Bus::dispatch(new SyncPassword($model, $credentials));
+        if ($driverName == "adldap") {
+            if ($this->user instanceof User) {
+                // If an LDAP user was discovered, we can go
+                // ahead and try to authenticate them.
+                if (Resolver::authenticate($this->user, $credentials)) {
+                    Event::fire(new AuthenticatedWithCredentials($this->user, $model));
 
-                    $model->save();
+                    // Here we will perform authorization on the LDAP user. If all
+                    // validation rules pass, we will allow the authentication
+                    // attempt. Otherwise, it is automatically rejected.
+                    if ($this->passesValidation($this->user, $model)) {
+                        // Here we can now synchronize / set the users password since
+                        // they have successfully passed authentication
+                        // and our validation rules.
+                        Bus::dispatch(new SyncPassword($model, $credentials));
 
-                    if ($model->wasRecentlyCreated) {
-                        // If the model was recently created, they
-                        // have been imported successfully.
-                        Event::fire(new Imported($this->user, $model));
+                        $model->save();
+
+                        if ($model->wasRecentlyCreated) {
+                            // If the model was recently created, they
+                            // have been imported successfully.
+                            Event::fire(new Imported($this->user, $model));
+                        }
+
+                        Event::fire(new AuthenticationSuccessful($this->user, $model));
+
+                        return true;
                     }
 
-                    Event::fire(new AuthenticationSuccessful($this->user, $model));
-
-                    return true;
+                    Event::fire(new AuthenticationRejected($this->user, $model));
                 }
 
-                Event::fire(new AuthenticationRejected($this->user, $model));
+                // LDAP Authentication failed.
+                return false;
             }
 
-            // LDAP Authentication failed.
+            if ($this->isFallingBack() && $model->exists) {
+                // If the user exists in our local database already and fallback is
+                // enabled, we'll perform standard eloquent authentication.
+                return $this->fallback->validateCredentials($model, $credentials);
+            }
+
             return false;
         }
 
-        if ($this->isFallingBack() && $model->exists) {
-            // If the user exists in our local database already and fallback is
-            // enabled, we'll perform standard eloquent authentication.
-            return $this->fallback->validateCredentials($model, $credentials);
-        }
+        $plain = $credentials['password'];
 
-        return false;
+        return $this->hasher->check($plain, $user->getAuthPassword());
     }
 
     /**

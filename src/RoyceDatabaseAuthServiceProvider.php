@@ -70,6 +70,8 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
         $this->registerBindings();
 
         $this->registerListeners();
+
+        \Log::info("Database driver $driverName has been registered");
     }
 
     /**
