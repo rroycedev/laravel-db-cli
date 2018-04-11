@@ -2,6 +2,8 @@
 
 ## Requirements
 
+Version 1.0.0
+
 To use Adldap2-Laravel, your application and server must meet the following requirements:
 
 - Laravel 5.*
