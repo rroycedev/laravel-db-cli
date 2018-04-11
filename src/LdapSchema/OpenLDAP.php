@@ -16,7 +16,7 @@ class OpenLDAP extends BaseSchema
 
     public function userPrincipalName()
     {
-        return Config::get('roycedb_ldap_schema.userprincipalname');
+        return Config::get('roycedb_ldap_schema.names.userprincipalname');
     }
 
     /**
@@ -24,7 +24,7 @@ class OpenLDAP extends BaseSchema
      */
     public function distinguishedName()
     {
-        return Config::get('roycedb_ldap_schema.distinguishedname');
+        return Config::get('roycedb_ldap_schema.names.distinguishedname');
     }
 
     /**
@@ -32,7 +32,7 @@ class OpenLDAP extends BaseSchema
      */
     public function distinguishedNameSubKey()
     {
-        return Config::get('roycedb_ldap_schema.distinguishednamesubkey');
+        return Config::get('roycedb_ldap_schema.names.distinguishednamesubkey');
     }
 
     /**
@@ -56,7 +56,7 @@ class OpenLDAP extends BaseSchema
      */
     public function lockoutTime()
     {
-        return Config::get('roycedb_ldap_schema.locktimeout');
+        return Config::get('roycedb_ldap_schema.names.locktimeout');
     }
 
     /**
@@ -64,7 +64,7 @@ class OpenLDAP extends BaseSchema
      */
     public function objectCategory()
     {
-        return Config::get('roycedb_ldap_schema.objectcategory');
+        return Config::get('roycedb_ldap_schema.names.objectcategory');
     }
 
     /**
@@ -72,7 +72,7 @@ class OpenLDAP extends BaseSchema
      */
     public function objectClassGroup()
     {
-        return Config::get('roycedb_ldap_schema.objectclassgroup');
+        return Config::get('roycedb_ldap_schema.names.objectclassgroup');
     }
 
     /**
@@ -80,7 +80,7 @@ class OpenLDAP extends BaseSchema
      */
     public function objectClassOu()
     {
-        return Config::get('roycedb_ldap_schema.objectclassou');
+        return Config::get('roycedb_ldap_schema.names.objectclassou');
     }
 
     /**
@@ -88,7 +88,7 @@ class OpenLDAP extends BaseSchema
      */
     public function objectClassPerson()
     {
-        return Config::get('roycedb_ldap_schema.objectclassperson');
+        return Config::get('roycedb_ldap_schema.names.objectclassperson');
     }
 
     /**
@@ -96,7 +96,7 @@ class OpenLDAP extends BaseSchema
      */
     public function objectGuid()
     {
-        return Config::get('roycedb_ldap_schema.objectguid');
+        return Config::get('roycedb_ldap_schema.names.objectguid');
     }
 
     /**
@@ -104,6 +104,6 @@ class OpenLDAP extends BaseSchema
      */
     public function objectGuidRequiresConversion()
     {
-        return Config::get('roycedb_ldap_schema.objectguidrequiresconversion');
+        return Config::get('roycedb_ldap_schema.names.objectguidrequiresconversion');
     }
 }
