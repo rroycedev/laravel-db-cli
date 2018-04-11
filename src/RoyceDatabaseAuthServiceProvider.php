@@ -25,16 +25,11 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-            echo "Boot\n";
-            exit(1);
-            
-        $config = __DIR__ . '/config/auth.php';
-
         $this->publishes([
-            $config => config_path('roycedb_auth.php'),
+            __DIR__ . '/../config/roycedb_ldap_schema.php' => config_path('roycedb_ldap_schema.php'),
+            __DIR__ . '/../config/roycedb.php' => config_path('roycedb.php'),
+            __DIR__ . '/../config/roycedb_auth.php' => config_path('roycedb_auth.php'),
         ], 'roycedb');
-
-        $this->mergeConfigFrom($config, 'roycedb_auth');
 
         $auth = Auth::getFacadeRoot();
 
@@ -56,9 +51,6 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        echo "AUTH REGISTER";
-        exit(1);
-
         $this->registerBindings();
 
         $this->registerListeners();
