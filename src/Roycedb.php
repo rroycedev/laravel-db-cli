@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\Foundation\Application;
 
-class RoyceDatabase
+class Roycedb
 {
     /**
      * The Laravel application instance.
