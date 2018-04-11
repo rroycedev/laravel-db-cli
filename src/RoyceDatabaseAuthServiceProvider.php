@@ -2,11 +2,8 @@
 
 namespace Roycedev\Roycedb;
 
-use Roycedev\Roycedb\Roycedb;
-
 use Adldap\Laravel\Auth\DatabaseUserProvider;
 use Adldap\Laravel\Resolvers\ResolverInterface;
-use Adldap\Laravel\Resolvers\UserResolver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +11,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
-use Roycedev\Roycedb\RoycedbInterface;
+use Roycedev\Roycedb\Resolvers\UserResolver;
+use Roycedev\Roycedb\Roycedb;
 
 class RoyceDatabaseAuthServiceProvider extends ServiceProvider
 {
