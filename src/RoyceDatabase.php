@@ -1,11 +1,6 @@
 <?php namespace Roycedev\Roycedb;
 
-use Exception;
-
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Session\SessionManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class RoyceDatabase
 {
@@ -50,7 +45,7 @@ class RoyceDatabase
     public function __construct($app = null)
     {
         if (!$app) {
-            $app = app();   //Fallback when $app is not given
+            $app = app(); //Fallback when $app is not given
         }
         $this->app = $app;
         $this->version = $app->version();
@@ -78,7 +73,7 @@ class RoyceDatabase
             return;
         }
 
-	$this->booted = true;
+        $this->booted = true;
     }
 
     /**

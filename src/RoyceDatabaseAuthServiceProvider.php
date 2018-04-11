@@ -2,6 +2,8 @@
 
 namespace Roycedev\Roycedb;
 
+use Roycedev\Roycedb\Roycedb;
+
 use Adldap\Laravel\Auth\DatabaseUserProvider;
 use Adldap\Laravel\Resolvers\ResolverInterface;
 use Adldap\Laravel\Resolvers\UserResolver;
@@ -80,7 +82,7 @@ class RoyceDatabaseAuthServiceProvider extends ServiceProvider
     protected function registerBindings()
     {
         $this->app->bind(ResolverInterface::class, function () {
-            $ad = $this->app->make(RoycedbInterface::class);
+            $ad = $this->app->make(Roycedb::class);
 
             return new UserResolver($ad);
         });

@@ -2,14 +2,12 @@
 
 namespace Roycedev\Roycedb;
 
-use Roycedev\Roycedb\Models\User;
-use Roycedev\Roycedb\Auth\DatabaseUserProvider;
-use Roycedev\Roycedb\Facades\Roycedb;
 use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Roycedev\Roycedb\Console\MakeDbTableCommand;
+use Roycedev\Roycedb\Facades\Roycedb;
 
 class RoyceDatabaseServiceProvider extends ServiceProvider
 {
@@ -20,8 +18,13 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $configPath = __DIR__ . '/../config/config.php';
-        $this->publishes([$configPath => $this->getConfigPath()], 'roycedb');
+//        $configPath = __DIR__ . '/../config/config.php';
+        //        $this->publishes([$configPath => $this->getConfigPath()], 'roycedb');
+        $this->publishes([
+            __DIR__ . '/../config/roycedb_ldap_schema.php' => config_path('roycedb_ldap_schema.php'),
+            __DIR__ . '/../config/roycedb.php' => config_path('roycedb.php'),
+            __DIR__ . '/../config/roycedb_auth.php' => config_path('roycedb_auth.php'),
+        ], 'roycedb');
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -96,7 +99,6 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
     {
         return ['roycedb', 'command.roycedb.maketable', Roycedb::class];
     }
-
 
     /**
      * Adds providers to the specified Adldap instance.
@@ -185,5 +187,5 @@ class RoyceDatabaseServiceProvider extends ServiceProvider
     protected function isLumen()
     {
         return str_contains($this->app->version(), 'Lumen');
-    }    
+    }
 }
